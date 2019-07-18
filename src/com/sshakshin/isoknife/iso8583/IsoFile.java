@@ -3,8 +3,6 @@ package com.sshakshin.isoknife.iso8583;
 import com.sshakshin.isoknife.xml.XmlReader;
 import com.sshakshin.isoknife.xml.XmlWriter;
 
-import java.beans.XMLDecoder;
-import java.beans.XMLEncoder;
 import java.io.*;
 import java.util.ArrayList;
 

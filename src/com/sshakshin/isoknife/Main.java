@@ -28,6 +28,7 @@ public class Main {
                     break;
                 case MERGE:
                     file = IsoFile.load(cfg.source);
+                    file.merge(Container.getOutputStream());
                     break;
 
             }

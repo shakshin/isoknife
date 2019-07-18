@@ -4,7 +4,6 @@ import com.sshakshin.isoknife.util.Tracer;
 
 import java.io.IOException;
 import java.io.InputStream;
-import java.io.StreamCorruptedException;
 
 public class FixedInputStream extends InputStream {
 
