@@ -24,7 +24,11 @@ public class Main {
             switch (cfg.mode) {
                 case PARSE:
                     file = IsoFile.parse(Container.getInputStream());
-
+                    file.save(cfg.destination);
+                    break;
+                case MERGE:
+                    file = IsoFile.load(cfg.source);
+                    break;
 
             }
         } catch (FileNotFoundException fnfe) {

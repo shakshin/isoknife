@@ -15,9 +15,9 @@ public abstract class Container {
             case CLEAN:
                 return clean;
             case RDW:
-                return new RDWInputStream(clean);
+                return new RDWInputStream(clean, false);
             case FIXED1014:
-                return new RDWInputStream(new FixedInputStream(clean));
+                return new RDWInputStream(new FixedInputStream(clean), true);
             case PREEDIT:
                 return new PreEditInputStream(clean);
         }

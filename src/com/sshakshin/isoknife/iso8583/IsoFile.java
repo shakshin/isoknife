@@ -1,13 +1,16 @@
 package com.sshakshin.isoknife.iso8583;
 
-import java.io.IOException;
-import java.io.InputStream;
-import java.io.OutputStream;
-import java.util.LinkedList;
+import com.sshakshin.isoknife.xml.XmlReader;
+import com.sshakshin.isoknife.xml.XmlWriter;
+
+import java.beans.XMLDecoder;
+import java.beans.XMLEncoder;
+import java.io.*;
+import java.util.ArrayList;
 
 public class IsoFile {
 
-    private LinkedList<IsoMessage> messages = new LinkedList<>();
+    private ArrayList<IsoMessage> messages = new ArrayList<>();
 
 
     public static IsoFile parse(InputStream in) throws IOException {
@@ -32,20 +35,21 @@ public class IsoFile {
 
     }
 
-    public static IsoFile load(String source) {
-        return null;
+    public static IsoFile load(String source) throws IOException {
+        IsoFile file = XmlReader.read(source);
+        return file;
     }
 
-    public void save(String dst) {
-
+    public void save(String dst) throws IOException {
+        XmlWriter.write(this, dst);
     }
 
 
-    public LinkedList<IsoMessage> getMessages() {
+    public ArrayList<IsoMessage> getMessages() {
         return messages;
     }
 
-    public void setMessages(LinkedList<IsoMessage> messages) {
+    public void setMessages(ArrayList<IsoMessage> messages) {
         this.messages = messages;
     }
 }

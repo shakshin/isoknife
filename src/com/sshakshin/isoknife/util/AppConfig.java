@@ -1,6 +1,9 @@
 package com.sshakshin.isoknife.util;
 
-import sun.util.resources.cldr.om.CalendarData_om_ET;
+import com.sshakshin.isoknife.iso8583.IsoMessageDefinition;
+import com.sshakshin.isoknife.mastercard.IpmMessageDefinition;
+
+import java.nio.charset.Charset;
 
 public class AppConfig {
     public enum Mode { PARSE, MERGE }
@@ -146,5 +149,23 @@ public class AppConfig {
             isValid = false;
             return;
         }
+    }
+
+    public Charset getRawCharset() {
+        switch (encoding) {
+            case ASCII:
+                return Charset.forName("ASCII");
+            case EBCDIC:
+                return Charset.forName("IBM500");
+        }
+        return Charset.forName("ASCII");
+    }
+
+    public IsoMessageDefinition getMesssageDef() {
+        switch (variant) {
+            case IPM:
+                return new IpmMessageDefinition();
+        }
+        return null;
     }
 }

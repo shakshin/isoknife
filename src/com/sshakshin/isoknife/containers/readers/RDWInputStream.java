@@ -1,5 +1,6 @@
 package com.sshakshin.isoknife.containers.readers;
 
+import com.sshakshin.isoknife.util.DataConverter;
 import com.sshakshin.isoknife.util.Tracer;
 
 import java.io.IOException;
@@ -11,10 +12,14 @@ public class RDWInputStream extends InputStream {
     private InputStream in = null;
     private byte[] buffer = null;
     private int offset = 0;
+    private boolean inFixed = false;
 
-    public RDWInputStream(InputStream i) {
+    private String hexBuff = null;
+
+    public RDWInputStream(InputStream i, boolean fixed) {
         super();
         in = i;
+        inFixed = fixed;
         Tracer.log("RDW in", "Stream created");
     }
 
@@ -29,9 +34,13 @@ public class RDWInputStream extends InputStream {
             return;
         }
 
-        if (cnt < 4) {
+        if (cnt < 4 && !inFixed) {
             Tracer.log("RDW in", "No enough byte to read RDW header: " + String.valueOf(cnt));
             throw new IOException("No enough bytes to read RDW header");
+        } else if (cnt < 4 && inFixed) {
+            Tracer.log("RDW in", "End of parent stream reached");
+            buffer = null;
+            return;
         }
 
         Tracer.log("RDW in", "RDW header fetched");
@@ -50,6 +59,8 @@ public class RDWInputStream extends InputStream {
         buffer = new byte[lengthRdw];
         int lengthReal = in.read(buffer);
 
+        hexBuff = DataConverter.bytesToHex(buffer);
+
         Tracer.log("RDW in", "Message payload fetched");
 
         if (lengthReal < lengthRdw) {
@@ -61,7 +72,7 @@ public class RDWInputStream extends InputStream {
 
     @Override
     public int read() throws IOException {
-        if (buffer == null || offset == buffer.length - 1) {
+        if (buffer == null || offset == buffer.length) {
             fetchMessage();
         }
 

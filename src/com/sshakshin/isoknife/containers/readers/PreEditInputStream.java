@@ -84,7 +84,7 @@ public class PreEditInputStream extends InputStream {
 
     @Override
     public int read() throws IOException {
-        if (buffer == null || offset == buffer.length - 1) {
+        if (buffer == null || offset == buffer.length) {
             fetchMessage();
         }
 
