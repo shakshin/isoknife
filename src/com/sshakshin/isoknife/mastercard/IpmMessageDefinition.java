@@ -36,13 +36,13 @@ public class IpmMessageDefinition extends IsoMessageDefinition {
         res.put(41, new IsoFieldDefinition(41, IsoFieldDefinition.LengthType.FIXED, 8, false));
         res.put(42, new IsoFieldDefinition(42, IsoFieldDefinition.LengthType.FIXED, 15, false));
         res.put(43, new IsoFieldDefinition(43, IsoFieldDefinition.LengthType.EMBEDDED, 2, false));
-        res.put(48, new IsoFieldDefinition(48, IsoFieldDefinition.LengthType.EMBEDDED, 3, true));
+        res.put(48, new IsoFieldDefinition(48, IsoFieldDefinition.LengthType.EMBEDDED, 3, false));
         res.put(49, new IsoFieldDefinition(49, IsoFieldDefinition.LengthType.FIXED, 3, false));
         res.put(50, new IsoFieldDefinition(50, IsoFieldDefinition.LengthType.FIXED, 3, false));
         res.put(51, new IsoFieldDefinition(51, IsoFieldDefinition.LengthType.FIXED, 3, false));
         res.put(54, new IsoFieldDefinition(54, IsoFieldDefinition.LengthType.EMBEDDED, 3, false));
         res.put(55, new IsoFieldDefinition(55, IsoFieldDefinition.LengthType.EMBEDDED, 3, true));
-        res.put(62, new IsoFieldDefinition(62, IsoFieldDefinition.LengthType.EMBEDDED, 3, true));
+        res.put(62, new IsoFieldDefinition(62, IsoFieldDefinition.LengthType.EMBEDDED, 3, false));
         res.put(63, new IsoFieldDefinition(63, IsoFieldDefinition.LengthType.EMBEDDED, 3, false));
         res.put(71, new IsoFieldDefinition(71, IsoFieldDefinition.LengthType.FIXED, 8, false));
         res.put(72, new IsoFieldDefinition(72, IsoFieldDefinition.LengthType.EMBEDDED, 3, false));
@@ -52,9 +52,9 @@ public class IpmMessageDefinition extends IsoMessageDefinition {
         res.put(95, new IsoFieldDefinition(95, IsoFieldDefinition.LengthType.EMBEDDED, 2, false));
         res.put(100, new IsoFieldDefinition(100, IsoFieldDefinition.LengthType.EMBEDDED, 2, false));
         res.put(111, new IsoFieldDefinition(111, IsoFieldDefinition.LengthType.EMBEDDED, 3, false));
-        res.put(123, new IsoFieldDefinition(123, IsoFieldDefinition.LengthType.EMBEDDED, 3, true));
-        res.put(124, new IsoFieldDefinition(124, IsoFieldDefinition.LengthType.EMBEDDED, 3, true));
-        res.put(125, new IsoFieldDefinition(125, IsoFieldDefinition.LengthType.EMBEDDED, 3, true));
+        res.put(123, new IsoFieldDefinition(123, IsoFieldDefinition.LengthType.EMBEDDED, 3, false));
+        res.put(124, new IsoFieldDefinition(124, IsoFieldDefinition.LengthType.EMBEDDED, 3, false));
+        res.put(125, new IsoFieldDefinition(125, IsoFieldDefinition.LengthType.EMBEDDED, 3, false));
         res.put(127, new IsoFieldDefinition(127, IsoFieldDefinition.LengthType.EMBEDDED, 3, false));
 
 

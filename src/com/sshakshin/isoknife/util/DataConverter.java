@@ -30,4 +30,12 @@ public  abstract class DataConverter {
 
         return new String(src, from).getBytes(Charset.forName("ASCII"));
     }
+
+    public static byte[] convertBytesOnWrite(byte[] src, Charset to) {
+        if (to == Charset.forName("ASCII"))
+            return src;
+
+        return new String(src, Charset.forName("ASCII")).getBytes(to);
+
+    }
 }

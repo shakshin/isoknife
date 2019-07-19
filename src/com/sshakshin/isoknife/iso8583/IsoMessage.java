@@ -1,14 +1,15 @@
 package com.sshakshin.isoknife.iso8583;
 
+import com.sshakshin.isoknife.containers.writers.RDWOutputStream;
 import com.sshakshin.isoknife.util.AppConfig;
+import com.sshakshin.isoknife.util.DataConverter;
 import com.sshakshin.isoknife.util.Tracer;
 
+import java.io.ByteArrayOutputStream;
 import java.io.IOException;
 import java.io.InputStream;
-import java.util.ArrayList;
-import java.util.BitSet;
-import java.util.List;
-import java.util.Map;
+import java.io.OutputStream;
+import java.util.*;
 
 public class IsoMessage {
 
@@ -116,6 +117,81 @@ public class IsoMessage {
 
         Tracer.log("IsoMessage", "Message parsed");
         return msg;
+    }
+
+    private void setBit(byte[] bitmap, int bit) {
+        int byteIndex = (bit - 1) / 8;
+        int localBitIndex = (bit - 1) % 8;
+        localBitIndex = 7 - localBitIndex;
+
+        int b = bitmap[byteIndex];
+        int v = (int) Math.pow(2, localBitIndex);
+        b += v;
+        bitmap[byteIndex] = (byte)b;
+    }
+
+    private void writeBitmap(OutputStream out) throws IOException {
+        Tracer.log("IsoMessage", "Preparing message bitmap(s)");
+
+        HashMap<Integer, byte[]> bitmaps = new HashMap<>();
+
+        for (IsoField field : fields) {
+            int bitmapIndex = (field.getIndex() / 64) + 1;
+            int bitIndex = field.getIndex() % 64;
+
+            byte[] bitmap = bitmaps.get(bitmapIndex);
+            if (bitmap == null) {
+                Tracer.log("IsoMessage", "Bitmap with index " + bitIndex + " created");
+                bitmap = new byte[8];
+                bitmaps.put(bitmapIndex, bitmap);
+                if (bitmapIndex > 1) {
+                    setBit(bitmaps.get(bitmapIndex -1), 1);
+                }
+            }
+
+            setBit(bitmap, bitIndex);
+
+        }
+
+        Tracer.log("IsoMessage", "Writing bitmap(s)");
+        int i = 1;
+        while (true) {
+            byte[] bitmap = bitmaps.get(i);
+            if (bitmap == null)
+                break;
+            out.write(bitmap);
+            i++;
+        }
+
+    }
+
+    public void merge(OutputStream out) throws IOException {
+        Tracer.log("IsoMessage", "Merging message");
+        ByteArrayOutputStream tmp = new ByteArrayOutputStream();
+
+        Tracer.log("IsoMessage", "Sorting message fields");
+        fields.sort((Comparator.comparingInt(IsoField::getIndex)));
+
+        Tracer.log("IsoMessage", "Writing MTI");
+        tmp.write(DataConverter.convertBytesOnWrite(mti.getBytes(), AppConfig.get().getRawCharset()));
+
+        writeBitmap(tmp);
+
+        Tracer.log("IsoMessage", "Writing fields");
+        for (IsoField field : fields) {
+            field.merge(tmp);
+        }
+
+        Tracer.log("IsoMessage", "Message data merged to buffer");
+        byte[] buff = tmp.toByteArray();
+        if (out instanceof RDWOutputStream) {
+            Tracer.log("IsoMessage", "Have to write RDW header");
+            ((RDWOutputStream)out).writeHeader(buff);
+        }
+        Tracer.log("IsoMessage", "Writing message data");
+        out.write(buff);
+        Tracer.log("IsoMessage", "Message writing finished");
+        tmp.close();
     }
 
     public String getMti() {

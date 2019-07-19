@@ -6,6 +6,8 @@ import com.sshakshin.isoknife.util.Tracer;
 
 import java.io.IOException;
 import java.io.InputStream;
+import java.io.OutputStream;
+import java.nio.ByteBuffer;
 
 public class IsoField {
     private Integer index;
@@ -78,6 +80,50 @@ public class IsoField {
         } else {
             return new byte[0];
         }
+    }
+
+    public void merge(OutputStream out) throws IOException {
+        Tracer.log("IsoField", "Merging field " + index.toString());
+        IsoMessageDefinition mdef = AppConfig.get().getMesssageDef();
+        if (mdef == null) {
+            Tracer.log("IsoField", "Failed to get message definition");
+            throw new IOException("No message definition");
+        }
+        IsoFieldDefinition fdef = mdef.getFields().get(index);
+        if (fdef == null) {
+            Tracer.log("IsoField", "Failed to get field definition");
+            throw new IOException("No field definition");
+        }
+
+        byte[] buff = null;
+        if (rawData != null) {
+            Tracer.log("IsoField", "Will use predefined RAW data");
+            buff = rawData;
+        } else if (data != null) {
+            Tracer.log("IsoField", "Preparing field data");
+            buff = data.getBytes(AppConfig.get().getRawCharset());
+        }
+
+        if (fdef.lengthType == IsoFieldDefinition.LengthType.EMBEDDED) {
+            Tracer.log("IsoField", "Writing embedded length value");
+            Integer len = buff.length;
+            String slen = len.toString();
+            if (slen.length() > fdef.length) {
+                Tracer.log("IsoField", "Embedded length value is too long");
+                throw new IOException("Field length value exceeds defined size");
+            }
+            while (slen.length() < fdef.length) slen = "0" + slen;
+
+            out.write(slen.getBytes(AppConfig.get().getRawCharset()));
+
+        } else {
+            if (buff.length != fdef.length) {
+                Tracer.log("IsoField", "Field value has wrong length. Should be  " + fdef.length);
+                throw new IOException("Wrong field value length");
+            }
+        }
+
+        out.write(buff);
     }
 
     public Integer getIndex() {
