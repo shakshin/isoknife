@@ -16,9 +16,9 @@ Tool to transcode and edit ISO 8583 files.
 
 6. Sets of encodings and file-level layouts can be extended to support any encodings and layouts you wish.
 
-Only Mastercard IPM file structure is supported for now. But all another formats can be supported in easy way on demand. Feel free to ask in Issued.
+Only Mastercard IPM file structure is supported for now. But all another formats can be supported in easy way on demand. Feel free to ask in Issues.
 
 ## Some description about me and this tool
-My name is Sergey Shakshin. I am Senior Software Engineer at Compass Plu Ltd.
+My name is Sergey Shakshin. I am Senior Software Engineer at Compass Plus Ltd.
 Now I work on banking application platform TranzAxis. And this tool is made to help me and my colleagues to debug some specific situations and generate test cases for our platform.
 You can use this code or compiled JAR to manipulate ISO 8583 files.
